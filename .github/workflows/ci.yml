@@ -24,9 +24,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Login to Harbor
-        run: echo "${{ env.HARBOR_PASSWORD }}" | docker login ${{ env.HARBOR_REGISTRY }} -u ${{ env.HARBOR_USERNAME }} --password-stdin
-
       - name: SSH and deploy with docker-compose
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -35,6 +32,7 @@ jobs:
           key: ${{ env.SSH_KEY }}
           script: |
             set -e
+            echo "${{ env.HARBOR_PASSWORD }}" | docker login ${{ env.HARBOR_REGISTRY }} -u ${{ env.HARBOR_USERNAME }} --password-stdin
 
             mkdir -p ~/apps/site-snoop-bot
             cd ~/apps/site-snoop-bot
