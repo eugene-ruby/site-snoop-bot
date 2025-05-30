@@ -1,52 +1,49 @@
-version: '3.9'
+version: "3.9"
 
 services:
-  bot:
-    build: .
-    command: bundle exec rake bot:listen
-    env_file: .env
+  site-snoop-bot:
+    image: ${HARBOR_REGISTRY}/site-snoop-app:latest
+    env_file:
+      - .env
+    restart: always
     depends_on:
       - redis
-      - db
-    restart: always
+      - postgres
     networks:
-      - backend
+      - snoopnet
 
-  sidekiq:
-    build: .
+  site-snoop-sidekiq:
+    image: ${HARBOR_REGISTRY}/site-snoop-app:latest
     command: bundle exec sidekiq -r ./config/boot.rb
-    env_file: .env
+    env_file:
+      - .env
     depends_on:
       - redis
-      - db
+      - postgres
     restart: always
     networks:
-      - backend
+      - snoopnet
 
   redis:
-    image: redis:7-alpine
+    image: redis:6
     restart: always
-    ports:
-      - "6379:6379"
     networks:
-      - backend
+      - snoopnet
 
-  db:
-    image: postgres:15-alpine
+  postgres:
+    image: postgres:15
     restart: always
-    volumes:
-      - site_snoop_pgdata:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: site_snoop
       POSTGRES_USER: snoop
       POSTGRES_PASSWORD: secret
-    ports:
-      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     networks:
-      - backend
+      - snoopnet
 
 volumes:
-  site_snoop_pgdata:
+  pgdata:
 
 networks:
-  backend:
+  snoopnet:
