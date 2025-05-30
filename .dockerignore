@@ -1,0 +1,6 @@
+log
+tmp
+.git
+vendor/bundle
+node_modules
+*.sqlite3

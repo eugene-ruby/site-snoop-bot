@@ -1,0 +1,13 @@
+source 'https://rubygems.org'
+
+gem 'dotenv'
+gem 'telegram-bot-ruby'
+gem 'rake'
+gem 'zeitwerk'
+gem 'selenium-webdriver'
+gem 'sequel'
+gem 'dry-monads'
+gem 'pg'
+gem 'rspec'
+gem 'redis'
+gem 'sidekiq'

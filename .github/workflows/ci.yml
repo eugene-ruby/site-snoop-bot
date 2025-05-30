@@ -1,0 +1,60 @@
+name: Deploy
+
+on:
+  push:
+    tags:
+      - 'v*'  # только теги, например v0.1.0
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      HARBOR_REGISTRY: ${{ secrets.HARBOR_REGISTRY }}
+      HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
+      HARBOR_PASSWORD: ${{ secrets.HARBOR_PASSWORD }}
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      TELEGRAM_API_TOKEN: ${{ secrets.TELEGRAM_API_TOKEN }}
+      REDIS_URL: ${{ secrets.REDIS_URL }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to Harbor
+        run: echo "${{ env.HARBOR_PASSWORD }}" | docker login ${{ env.HARBOR_REGISTRY }} -u ${{ env.HARBOR_USERNAME }} --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ env.HARBOR_REGISTRY }}/site-snoop-bot:latest .
+          docker tag ${{ env.HARBOR_REGISTRY }}/site-snoop-bot:latest ${{ env.HARBOR_REGISTRY }}/site-snoop-bot:${GITHUB_REF_NAME}
+
+      - name: Push image to Harbor
+        run: |
+          docker push ${{ env.HARBOR_REGISTRY }}/site-snoop-bot:latest
+          docker push ${{ env.HARBOR_REGISTRY }}/site-snoop-bot:${GITHUB_REF_NAME}
+
+      - name: SSH into production and restart container
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          envs: HARBOR_REGISTRY,HARBOR_USERNAME,HARBOR_PASSWORD,SSH_HOME,TELEGRAM_API_TOKEN,DATABASE_URL,REDIS_URL
+          script: |
+            mkdir -p apps/site-snoop-bot
+            cd ${{ env.SSH_HOME }}/apps/site-snoop-bot
+            echo "TELEGRAM_API_TOKEN=${{ env.TELEGRAM_API_TOKEN }}" > .env
+            echo "REDIS_URL=${{ env.REDIS_URL }}" >> .env
+            echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> .env
+
+            docker pull ${{ env.HARBOR_REGISTRY }}/site-snoop-bot:${GITHUB_REF_NAME}
+            docker stop site-snoop-bot || true
+            docker rm site-snoop-bot || true
+            docker run -d --name site-snoop-bot \
+              --env-file ${{ env.SSH_HOME }}/apps/site-snoop/.env \
+              --restart always --network \
+              ${{ env.HARBOR_REGISTRY }}/site-snoop-bot:${GITHUB_REF_NAME}
