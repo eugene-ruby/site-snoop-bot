@@ -12,7 +12,8 @@ module Bot
           case result.failure
           when :exists
             bot.api.send_message(chat_id: message.chat.id, text: "Я уже наблюдаю за этим элементом.")
-          else
+          when :limit_exceeded
+            bot.api.send_message(chat_id: message.chat.id, text: "Вы добавили слишком много отслеживаемых элементов. Доступно не более 10.")
             SiteSnoopBot.logger.error("Watch creation error: #{result.failure.inspect}")
             bot.api.send_message(chat_id: message.chat.id, text: "Не удалось установить наблюдение. Попробуйте позже.")
           end

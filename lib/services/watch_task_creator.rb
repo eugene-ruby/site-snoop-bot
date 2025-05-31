@@ -14,6 +14,8 @@ class WatchTaskCreator
   end
 
   def call
+    return Failure(:limit_exceeded) if Snapshot.where(chat_id: @chat_id).count >= 10
+
     snapshot = Snapshot.where(url: @url, attribute_query: @selector).first
 
     if snapshot

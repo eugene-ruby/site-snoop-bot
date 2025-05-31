@@ -39,5 +39,14 @@ RSpec.describe Bot::Commands::WatchCommand do
         described_class.call(bot: bot, message: message)
       end
     end
-  end
+    context 'when watch task limit is exceeded' do
+      before do
+        allow(WatchTaskCreator).to receive(:call).with(url: 'http://example.com', selector: 'data-qa=title', chat_id: 1).and_return(Dry::Monads::Failure(:limit_exceeded))
+      end
+
+      it 'sends a limit exceeded message' do
+        expect(api).to receive(:send_message).with(chat_id: message.chat.id, text: "Вы добавили слишком много отслеживаемых элементов. Доступно не более 10.")
+        described_class.call(bot: bot, message: message)
+      end
+    end
 end
