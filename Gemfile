@@ -13,7 +13,6 @@ gem 'factory_bot'
 gem 'database_cleaner-sequel'
 gem 'redis'
 gem 'sidekiq'
-gem 'sidekiq-cron'
 
 group :development, :test do
   gem 'webrick'

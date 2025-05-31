@@ -1,3 +1,5 @@
+require 'sidekiq'
+
 class CheckTaskWorker
   include Sidekiq::Worker
 
@@ -15,7 +17,7 @@ class CheckTaskWorker
 
       process_snapshot(snapshot, content)
     rescue Selenium::WebDriver::Error::NoSuchElementError => e
-      SiteSnoopBot.logger.warn("Элемент не найден по запросу: '#{attribute_query}' на странице #{url} (snapshot_id: #{snapshot.id})")
+      Bot::Logger.logger.warn("Элемент не найден по запросу: '#{attribute_query}' на странице #{url} (snapshot_id: #{snapshot.id})")
       snapshot.update(last_checked_at: Time.now)
       handle_error(e)
     end
@@ -72,6 +74,6 @@ class CheckTaskWorker
   end
 
   def handle_error(error)
-    Bot::SiteSnoopBot.logger.error("Ошибка: #{error.message}")
+    Bot::Logger.logger.error("Ошибка: #{error.message}")
   end
 end

@@ -9,7 +9,7 @@ module Bot
           bot.api.send_message(chat_id: chat_id, text: "Вы пока ни за чем не наблюдаете.")
         else
           response = snapshots.map do |s|
-            "ID: #{s.id}, URL: #{s.url}, Attribute Query: #{s.attribute_query}, Last Checked At: #{s.last_checked_at.strftime('%Y-%m-%d %H:%M:%S')}"
+            "ID: #{s.id}, URL: #{s.url}, Attribute Query: #{s.attribute_query}, Last Checked At: #{s.last_checked_at.strftime('%Y-%m-%d %H:%M')}"
           end
           bot.api.send_message(chat_id: chat_id, text: response.join("\n"))
         end

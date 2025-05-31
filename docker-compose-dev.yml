@@ -9,7 +9,7 @@ services:
     env_file: .env
     depends_on:
       - redis
-      - db
+      - postgres
     restart: always
     networks:
       - backend
@@ -22,7 +22,7 @@ services:
     env_file: .env
     depends_on:
       - redis
-      - db
+      - postgres
     restart: always
     networks:
       - backend

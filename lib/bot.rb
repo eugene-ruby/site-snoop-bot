@@ -5,9 +5,8 @@ module Bot
   class SiteSnoopBot
     TELEGRAM_BOT_TOKEN = ENV.fetch('TELEGRAM_BOT_TOKEN').freeze
     def self.logger
-    @logger ||= Logger.new($stdout)
+      Bot::Logger.logger
     end
-
 
     def self.run
     Telegram::Bot::Client.run(TELEGRAM_BOT_TOKEN) do |bot|

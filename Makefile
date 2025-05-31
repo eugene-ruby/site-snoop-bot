@@ -32,5 +32,5 @@ deploy-bump:
 
 test:
 	docker-compose -f docker-compose-dev.yml build
-	docker-compose -f docker-compose-dev.yml run --rm site-snoop-bot bundle exec rspec
+	docker-compose -f docker-compose-dev.yml run --rm bot bundle exec rspec
 	docker-compose -f docker-compose-dev.yml down

@@ -1,5 +1,4 @@
 require 'sidekiq'
-
 class SnapshotCheckAllWorker
   include Sidekiq::Worker
 

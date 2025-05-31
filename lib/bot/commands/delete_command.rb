@@ -7,10 +7,10 @@ module Bot
 
         if snapshot
           snapshot.delete
-          Bot::Logger.instance.info("Снимок с ID #{snapshot_id} удален.")
+          Bot::Logger.logger.info("Снимок с ID #{snapshot_id} удален.")
           bot.api.send_message(chat_id: message.chat.id, text: "Снимок с ID #{snapshot_id} удален.")
         else
-          Bot::Logger.instance.info("Снимок с ID #{snapshot_id} не найден.")
+          Bot::Logger.logger.info("Снимок с ID #{snapshot_id} не найден.")
           bot.api.send_message(chat_id: message.chat.id, text: "Снимок с ID #{snapshot_id} не найден.")
         end
       end
