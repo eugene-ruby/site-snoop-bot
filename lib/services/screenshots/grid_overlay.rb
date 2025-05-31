@@ -1,4 +1,5 @@
 require 'mini_magick'
+require_relative '../../config/constants'
 
 module Screenshots
   class GridOverlay
@@ -31,6 +32,18 @@ module Screenshots
         (1..(@rows - 1)).each do |i|
           y = grid_height * i
           c.draw "line 0,#{y} #{width},#{y}"
+        end
+
+        # Add cell numbers
+        cell_number = 1
+        (0..(@rows - 1)).each do |row|
+          (0..(@columns - 1)).each do |col|
+            x = col * grid_width + grid_width / 4
+            y = row * grid_height + grid_height / 4
+            c.fill GRID_LINE_COLOR
+            c.draw "text #{x},#{y} '#{cell_number}'"
+            cell_number += 1
+          end
         end
       end
 
