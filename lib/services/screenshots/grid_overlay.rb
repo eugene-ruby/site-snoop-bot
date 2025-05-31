@@ -1,5 +1,4 @@
 require 'mini_magick'
-require_relative '../../config/constants'
 
 module Screenshots
   class GridOverlay
