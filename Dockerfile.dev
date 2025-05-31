@@ -1,4 +1,4 @@
-FROM harbor.in.vocabapp.ru/projects/ruby-ruby3.4-node-chrome:latest
+FROM harbor.infra.vocabapp.ru/projects/ruby-ruby3.4-node-chrome:latest
 
 WORKDIR /app
 COPY . /app
