@@ -30,6 +30,9 @@ module Screenshots
       
       driver.manage.window.resize_to(scroll_width, scroll_height)
       driver.save_screenshot(file_path)
+      
+      image = MiniMagick::Image.open(file_path)
+      image.colorspace "sRGB"
     end
   end
 end
