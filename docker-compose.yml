@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   site-snoop-bot:
-    image: ${HARBOR_REGISTRY}/projects/site-snoop-app:latest
+    image: harbor.in.vocabapp.ru/projects/site-snoop-app:latest
     env_file:
       - .env
     restart: always
@@ -13,7 +13,7 @@ services:
       - snoopnet
 
   site-snoop-sidekiq:
-    image: ${HARBOR_REGISTRY}/projects/site-snoop-app:latest
+    image: harbor.in.vocabapp.ru/projects/site-snoop-app:latest
     command: bundle exec sidekiq -r ./config/boot.rb
     env_file:
       - .env

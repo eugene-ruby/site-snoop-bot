@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      HARBOR_REGISTRY: ${{ secrets.HARBOR_REGISTRY }}
       HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
       HARBOR_PASSWORD: ${{ secrets.HARBOR_PASSWORD }}
       TELEGRAM_API_TOKEN: ${{ secrets.TELEGRAM_API_TOKEN }}
@@ -30,7 +29,7 @@ jobs:
           script: |
             set -e
           
-            echo "${{ env.HARBOR_PASSWORD }}" | docker login ${{ env.HARBOR_REGISTRY }} -u ${{ env.HARBOR_USERNAME }} --password-stdin
+            echo "${{ env.HARBOR_PASSWORD }}" | docker login harbor.in.vocabapp.ru -u ${{ env.HARBOR_USERNAME }} --password-stdin
           
             mkdir -p ~/apps
             cd ~/apps
@@ -51,7 +50,7 @@ jobs:
             echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> .env
           
             echo "⬇️  Pulling Docker image"
-            docker pull ${{ env.HARBOR_REGISTRY }}/projects/site-snoop-app:latest
+            docker pull harbor.in.vocabapp.ru/projects/site-snoop-app:latest
           
             echo "🔄 Restarting with docker-compose"
             docker-compose down
