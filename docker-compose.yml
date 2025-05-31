@@ -15,7 +15,9 @@ services:
 
   site-snoop-sidekiq:
     image: harbor.in.vocabapp.ru/projects/site-snoop-app:latest
-    command: bundle exec sidekiq -r ./config/boot.rb
+    command: >
+      sh -c "service cron start &&
+             bundle exec sidekiq -r ./config/boot.rb"
     environment:
       - REDIS_URL=${REDIS_URL}
     env_file:

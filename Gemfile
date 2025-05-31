@@ -12,3 +12,7 @@ gem 'rspec'
 gem 'redis'
 gem 'sidekiq'
 gem 'sidekiq-cron'
+
+group :development do
+  gem 'whenever', require: false
+end
