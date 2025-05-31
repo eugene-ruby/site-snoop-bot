@@ -29,3 +29,8 @@ deploy-bump:
 	echo "🚀 Новый тег: $$new_tag"; \
 	git tag -a $$new_tag -m "Release $$new_tag"; \
 	git push origin $$new_tag
+
+test:
+	docker-compose -f docker-compose-dev.yml build
+	docker-compose -f docker-compose-dev.yml run --rm site-snoop-bot bundle exec rspec
+	docker-compose -f docker-compose-dev.yml down
