@@ -41,7 +41,7 @@ jobs:
               git pull
             else
               echo "📥 Cloning fresh copy of site-snoop-bot"
-              git clone git@github.com:<твой-логин>/site-snoop-bot.git
+              git clone git@github.com/eugene-ruby/site-snoop-bot.git
               cd site-snoop-bot
             fi
           
