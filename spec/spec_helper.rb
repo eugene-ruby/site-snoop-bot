@@ -3,9 +3,8 @@ require_relative '../db/setup'
 require 'zeitwerk'
 
 require_relative '../config/boot'
+require 'rspec'
 
-require 'rspec'
-require 'rspec'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

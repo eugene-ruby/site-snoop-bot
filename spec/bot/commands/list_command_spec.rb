@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'bot/commands/list_command'
 
 RSpec.describe Bot::Commands::ListCommand do
   let(:bot) { double('bot', api: api) }
@@ -9,11 +8,11 @@ RSpec.describe Bot::Commands::ListCommand do
   describe '.call' do
     context 'when there are snapshots' do
       before do
-        allow(Snapshot).to receive(:where).with(chat_id: 1).and_return([double('snapshot', url: 'http://example.com', attribute_query: 'data-qa=title')])
+        allow(Snapshot).to receive(:where).with(chat_id: 1).and_return([double('snapshot', id: 11, url: 'http://example.com', attribute_query: 'data-qa=title')])
       end
 
       it 'sends a list of snapshots' do
-        expect(api).to receive(:send_message).with(chat_id: 1, text: "URL: http://example.com, Attribute Query: data-qa=title")
+        expect(api).to receive(:send_message).with(chat_id: 1, text: "ID: 11, URL: http://example.com, Attribute Query: data-qa=title")
         described_class.call(bot: bot, message: message)
       end
     end

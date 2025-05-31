@@ -49,4 +49,5 @@ RSpec.describe Bot::Commands::WatchCommand do
         described_class.call(bot: bot, message: message)
       end
     end
+  end
 end
