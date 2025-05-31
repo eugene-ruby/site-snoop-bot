@@ -2,4 +2,8 @@
 require_relative '../config/boot'
 require 'irb'
 
+def reload!
+  Dir["#{__dir__}/../lib/**/*.rb"].each { |file| load file }
+end
+
 IRB.start
