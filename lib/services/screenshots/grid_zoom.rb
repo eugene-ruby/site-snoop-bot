@@ -23,7 +23,12 @@ module Screenshots
 
       cropped_image_path = "tmp/screenshots/cropped_#{SecureRandom.hex(5)}_#{Time.now.to_i}.png"
       image.crop("#{cell_width}x#{cell_height}+#{x}+#{y}")
-      image.write(cropped_image_path)
+      
+      MiniMagick::Tool::Convert.new do |convert|
+        convert << cropped_image_path
+        convert.colorspace "sRGB"
+        convert << cropped_image_path
+      end
 
       overlay = Screenshots::GridOverlay.new(cropped_image_path, columns: 3, rows: 3)
       overlay.apply_grid_overlay
