@@ -1,0 +1,49 @@
+name: Deploy
+
+on:
+  push:
+    tags:
+      - 'v*'  # Теги вида v0.1.0
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: test_db
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+
+    env:
+      DATABASE_URL: postgres://postgres:password@localhost:5432/test_db
+      REDIS_URL: redis://localhost:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4
+          bundler-cache: true
+
+      - name: Install dependencies
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Run RSpec
+        run: bundle exec rspec --format documentation
