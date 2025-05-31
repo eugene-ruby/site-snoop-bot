@@ -47,7 +47,7 @@ jobs:
             docker pull harbor.in.vocabapp.ru/projects/ruby-ruby3.4-node-chrome:latest
             echo "⬇️  Build App Docker image"
             docker build -t harbor.in.vocabapp.ru/projects/site-snoop-app:latest .
-            docker pull harbor.in.vocabapp.ru/projects/site-snoop-app:latest
+            docker push harbor.infra.vocabapp.ru/projects/site-snoop-app:latest
 
             echo "💾 Writing .env"
             echo "TELEGRAM_API_TOKEN=${{ env.TELEGRAM_API_TOKEN }}" > .env
