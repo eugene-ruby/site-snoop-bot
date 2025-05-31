@@ -1,20 +1,25 @@
-require 'sidekiq'
-require 'selenium-webdriver'
-require 'digest'
-require 'tmpdir'
-
 class CheckTaskWorker
   include Sidekiq::Worker
 
   def perform(snapshot_id)
     snapshot = Snapshot[snapshot_id]
-    with_driver do |driver|
-      content = extract_content(driver, snapshot.url, snapshot.attribute_query)
+    return unless snapshot
+
+    begin
+      content = with_driver do |driver|
+        url = snapshot.url
+        attribute_query = snapshot.attribute_query
+        driver.get(url)
+        extract_content(driver, url, attribute_query)
+      end
+
       process_snapshot(snapshot, content)
+    rescue Selenium::WebDriver::Error::NoSuchElementError => e
+      SiteSnoopBot.logger.warn("Элемент не найден по запросу: '#{attribute_query}' на странице #{url} (snapshot_id: #{snapshot.id})")
+      snapshot.update(last_checked_at: Time.now)
+      handle_error(e)
     end
   end
-
-  private
 
   def with_driver
     Dir.mktmpdir do |user_data_dir|
@@ -40,8 +45,6 @@ class CheckTaskWorker
   end
 
   def extract_content(driver, url, attribute_query)
-    driver.navigate.to url
-    # Пример: attribute_query = 'data-qa="title"'
     if attribute_query =~ /(.+?)=["']?([^"']+)["']?/
       attribute = Regexp.last_match(1)
       value = Regexp.last_match(2)
