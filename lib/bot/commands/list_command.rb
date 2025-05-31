@@ -8,8 +8,10 @@ module Bot
         if snapshots.empty?
           bot.api.send_message(chat_id: chat_id, text: "Вы пока ни за чем не наблюдаете.")
         else
-          response = snapshots.map { |s| "ID: #{s.id}, URL: #{s.url}, Attribute Query: #{s.attribute_query}" }.join("\n")
-          bot.api.send_message(chat_id: chat_id, text: response)
+          response = snapshots.map do |s|
+            "ID: #{s.id}, URL: #{s.url}, Attribute Query: #{s.attribute_query}, Last Checked At: #{s.last_checked_at.strftime('%Y-%m-%d %H:%M:%S')}"
+          end
+          bot.api.send_message(chat_id: chat_id, text: response.join("\n"))
         end
       end
     end
