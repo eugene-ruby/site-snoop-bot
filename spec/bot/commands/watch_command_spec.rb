@@ -24,6 +24,7 @@ RSpec.describe Bot::Commands::WatchCommand do
     end
 
     context 'when there is an error creating the watch task' do
+
       it 'sends an error message' do
         expect(api).to receive(:send_message).with(chat_id: message.chat.id, text: "Не удалось установить наблюдение. Попробуйте позже.")
         described_class.call(bot: bot, message: message)
@@ -31,11 +32,12 @@ RSpec.describe Bot::Commands::WatchCommand do
     end
     context 'when watch task limit is exceeded' do
       before do
-        create_list(:snapshot, 10, chat_id: 1)
+        stub_const('MAX_SNAPSHOTS_PER_CHAT', 2)
+        create_list(:snapshot, 2, chat_id: 1)
       end
 
       it 'sends a limit exceeded message' do
-        expect(api).to receive(:send_message).with(chat_id: message.chat.id, text: "Вы добавили слишком много отслеживаемых элементов. Доступно не более 10.")
+        expect(api).to receive(:send_message).with(chat_id: message.chat.id, text: "Вы добавили слишком много отслеживаемых элементов. Доступно не более 2.")
         described_class.call(bot: bot, message: message)
       end
     end
