@@ -30,6 +30,7 @@ jobs:
           script: |
             set -e
             echo "${{ env.HARBOR_PASSWORD }}" | docker login ${{ env.HARBOR_REGISTRY }} -u ${{ env.HARBOR_USERNAME }} --password-stdin
+            docker pull ${{ env.HARBOR_REGISTRY }}/projects/site-snoop-app:latest
 
             mkdir -p ~/apps/site-snoop-bot
             cd ~/apps/site-snoop-bot
