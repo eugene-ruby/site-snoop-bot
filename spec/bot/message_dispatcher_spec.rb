@@ -1,13 +1,14 @@
 require 'spec_helper'
 
 RSpec.describe Bot::MessageDispatcher do
-  let(:bot) { double('bot', api: double('api', send_message: nil)) }
-  let(:chat_id) { 123 }
-  let(:message_start) { double('message', text: '/start', chat: double('chat', id: chat_id)) }
-  let(:message_watch) { double('message', text: '/watch example.com attribute', chat: double('chat', id: chat_id)) }
-  let(:message_list) { double('message', text: '/list', chat: double('chat', id: chat_id)) }
-  let(:message_del) { double('message', text: '/del 1', chat: double('chat', id: chat_id)) }
-  let(:message_unknown) { double('message', text: '/unknownFake', chat: double('chat', id: chat_id)) }
+  let(:bot) { double('bot', api: api) }
+  let(:api) { double('api') }
+  let(:message_start) { double('message', text: '/start', chat: double('chat', id: 1)) }
+  let(:message_watch) { double('message', text: '/watch example.com attribute', chat: double('chat', id: 1)) }
+  let(:message_list) { double('message', text: '/list', chat: double('chat', id: 1)) }
+  let(:message_del) { double('message', text: '/del 1', chat: double('chat', id: 1)) }
+  let(:message_screen) { double('message', text: '/screen example.com', chat: double('chat', id: 1)) }
+  let(:message_unknown) { double('message', text: '/unknownFake', chat: double('chat', id: 1)) }
 
   describe '.call' do
     it 'calls StartCommand for /start message' do
@@ -28,6 +29,11 @@ RSpec.describe Bot::MessageDispatcher do
     it 'calls DeleteCommand for /del message' do
       expect(Bot::Commands::DeleteCommand).to receive(:call).with(bot: bot, message: message_del)
       described_class.call(bot, message_del)
+    end
+
+    it 'calls ScreenCommand for /screen message' do
+      expect(Bot::Commands::ScreenCommand).to receive(:call).with(bot: bot, message: message_screen)
+      described_class.call(bot, message_screen)
     end
   end
 
