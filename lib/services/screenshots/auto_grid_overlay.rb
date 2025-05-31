@@ -1,7 +1,8 @@
 module Screenshots
   class AutoGridOverlay
-    def initialize(image_path)
+    def initialize(image_path, target_cell_size:)
       @image_path = image_path
+      @target_cell_size = target_cell_size
     end
 
     def calculate_grid_dimensions
@@ -9,13 +10,10 @@ module Screenshots
       width = image.width
       height = image.height
 
-      columns = (width / 300.0).ceil
-      rows = (height / 300.0).ceil
+      columns = (width / @target_cell_size.to_f).ceil
+      rows = (height / @target_cell_size.to_f).ceil
 
-      columns = [columns, 10].min
-      rows = [rows, 10].min
-
-      [columns, rows]
+      [columns, rows].map { |v| [v, GRID_MAX].min }
     end
   end
 end

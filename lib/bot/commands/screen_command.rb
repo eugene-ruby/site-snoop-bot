@@ -10,8 +10,7 @@ module Bot
           return
         end
 
-        screenshot = Screenshot::Screenshot.new(url)
-        file_path = screenshot.capture
+        file_path = Screenshots::GridPreview.new(url).call
 
         if File.exist?(file_path)
           bot.api.send_photo(chat_id: chat_id, photo: Faraday::UploadIO.new(file_path, 'image/png'))

@@ -20,7 +20,7 @@ module Screenshots
         )
         zoomed.zoom
       else
-        auto_grid_overlay = Screenshots::AutoGridOverlay.new(screenshot_path)
+        auto_grid_overlay = Screenshots::AutoGridOverlay.new(screenshot_path, target_cell_size: 600)
         columns, rows = auto_grid_overlay.calculate_grid_dimensions
 
         overlay = Screenshots::GridOverlay.new(screenshot_path, columns: columns, rows: rows)
