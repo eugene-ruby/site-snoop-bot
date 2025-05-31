@@ -4,6 +4,7 @@ require 'zeitwerk'
 
 require_relative '../config/boot'
 require 'rspec'
+require 'factory_bot'
 
 
 RSpec.configure do |config|
