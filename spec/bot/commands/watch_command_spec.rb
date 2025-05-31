@@ -8,10 +8,6 @@ RSpec.describe Bot::Commands::WatchCommand do
 
   describe '.call' do
     context 'when watch task is created' do
-      before do
-        allow(WatchTaskCreator).to receive(:call).with(url: 'http://example.com', selector: 'data-qa=title', chat_id: 1).and_return(Dry::Monads::Success(:created))
-      end
-
       it 'sends a success message' do
         expect(api).to receive(:send_message).with(chat_id: message.chat.id, text: "Теперь слежу за http://example.com с атрибутом data-qa=title.")
         described_class.call(bot: bot, message: message)
@@ -19,9 +15,7 @@ RSpec.describe Bot::Commands::WatchCommand do
     end
 
     context 'when watch task already exists' do
-      before do
-        allow(WatchTaskCreator).to receive(:call).with(url: 'http://example.com', selector: 'data-qa=title', chat_id: 1).and_return(Dry::Monads::Failure(:exists))
-      end
+      let!(:snapshot) { create(:snapshot, chat_id: 1, url: 'http://example.com', attribute_query: 'data-qa=title') }
 
       it 'sends an exists message' do
         expect(api).to receive(:send_message).with(chat_id: message.chat.id, text: "Я уже наблюдаю за этим элементом.")
@@ -30,10 +24,6 @@ RSpec.describe Bot::Commands::WatchCommand do
     end
 
     context 'when there is an error creating the watch task' do
-      before do
-        allow(WatchTaskCreator).to receive(:call).with(url: 'http://example.com', selector: 'data-qa=title', chat_id: 1).and_return(Dry::Monads::Failure(:error))
-      end
-
       it 'sends an error message' do
         expect(api).to receive(:send_message).with(chat_id: message.chat.id, text: "Не удалось установить наблюдение. Попробуйте позже.")
         described_class.call(bot: bot, message: message)
@@ -41,7 +31,7 @@ RSpec.describe Bot::Commands::WatchCommand do
     end
     context 'when watch task limit is exceeded' do
       before do
-        allow(WatchTaskCreator).to receive(:call).with(url: 'http://example.com', selector: 'data-qa=title', chat_id: 1).and_return(Dry::Monads::Failure(:limit_exceeded))
+        create_list(:snapshot, 10, chat_id: 1)
       end
 
       it 'sends a limit exceeded message' do
