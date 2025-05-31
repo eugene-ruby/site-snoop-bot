@@ -1,4 +1,5 @@
 require 'sidekiq'
+require_relative '../snoop/browser'
 
 class CheckTaskWorker
   include Sidekiq::Worker
@@ -17,7 +18,7 @@ class CheckTaskWorker
       end
 
       process_snapshot(snapshot, content)
-    rescue Selenium::WebDriver::Error::NoSuchElementError => e
+    rescue Snoop::Browser::Error => e
       Bot::Logger.logger.warn("Элемент не найден по запросу: '#{attribute_query}' на странице #{url} (snapshot_id: #{snapshot.id})")
       snapshot.update(last_checked_at: Time.now)
       handle_error(e)
