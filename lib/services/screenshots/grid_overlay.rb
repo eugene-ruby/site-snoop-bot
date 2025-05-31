@@ -1,4 +1,5 @@
 require 'mini_magick'
+require_relative '../../config/constants'
 
 module Screenshots
   class GridOverlay
@@ -15,33 +16,19 @@ module Screenshots
 
       grid_width = width / @columns
       grid_height = height / @rows
+      pointsize = (grid_height / 3).to_i
 
       image.combine_options do |c|
-        c.fill 'none'
+        c.fill GRID_LINE_COLOR
         c.stroke GRID_LINE_COLOR
-        c.strokewidth GRID_LINE_WIDTH
+        c.strokewidth 2
+        c.pointsize pointsize
 
-        # Draw vertical lines
-        (1..(@columns - 1)).each do |i|
-          x = grid_width * i
-          c.draw "line #{x},0 #{x},#{height}"
-        end
-
-        # Draw horizontal lines
-        (1..(@rows - 1)).each do |i|
-          y = grid_height * i
-          c.draw "line 0,#{y} #{width},#{y}"
-        end
-
-        # Add cell numbers
-        cell_number = 1
         (0..(@rows - 1)).each do |row|
           (0..(@columns - 1)).each do |col|
             x = col * grid_width + grid_width / 4
             y = row * grid_height + grid_height / 4
-            c.fill GRID_LINE_COLOR
-            c.draw "text #{x},#{y} '#{cell_number}'"
-            cell_number += 1
+            c.draw "text #{x},#{y} '#{row * @columns + col + 1}'"
           end
         end
       end
