@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative '../../spec_helper'
 require 'bot/commands/watch_command'
 
 RSpec.describe Bot::Commands::WatchCommand do
