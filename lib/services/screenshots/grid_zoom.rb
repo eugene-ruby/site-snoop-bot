@@ -1,6 +1,6 @@
 module Screenshots
   class GridZoom
-    def initialize(screenshot_path, columns, rows, target)
+    def initialize(screenshot_path, columns:, rows:, target:)
       @screenshot_path = screenshot_path
       @columns = columns
       @rows = rows
@@ -21,7 +21,7 @@ module Screenshots
       x = col * cell_width
       y = row * cell_height
 
-      cropped_image_path = "tmp/cropped_#{SecureRandom.hex(5)}_#{Time.now.to_i}.png"
+      cropped_image_path = "tmp/screenshots/cropped_#{SecureRandom.hex(5)}_#{Time.now.to_i}.png"
       image.crop("#{cell_width}x#{cell_height}+#{x}+#{y}")
       image.write(cropped_image_path)
 
