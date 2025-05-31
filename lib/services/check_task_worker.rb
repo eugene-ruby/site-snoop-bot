@@ -69,6 +69,6 @@ class CheckTaskWorker
   end
 
   def handle_error(error)
-    SiteSnoopBot.logger.error("Ошибка: #{error.message}")
+    Bot::SiteSnoopBot.logger.error("Ошибка: #{error.message}")
   end
 end
