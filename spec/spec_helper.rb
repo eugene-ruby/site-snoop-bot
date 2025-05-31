@@ -6,7 +6,7 @@ require 'zeitwerk'
 require 'rspec'
 require 'factory_bot'
 
-require 'database_cleaner/active_record'
+require 'database_cleaner/sequel'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -23,12 +23,13 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     FactoryBot.find_definitions
-    DatabaseCleaner.clean_with(:truncation)
-    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner[:sequel].db = DB
+    DatabaseCleaner[:sequel].clean_with(:truncation)
+    DatabaseCleaner[:sequel].strategy = :transaction
   end
 
   config.around(:each) do |example|
-    DatabaseCleaner.cleaning do
+    DatabaseCleaner[:sequel].cleaning do
       example.run
     end
   end
