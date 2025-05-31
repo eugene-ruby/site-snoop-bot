@@ -29,8 +29,6 @@ jobs:
           script: |
             set -e
           
-            echo "${{ env.HARBOR_PASSWORD }}" | docker login harbor.in.vocabapp.ru -u ${{ env.HARBOR_USERNAME }} --password-stdin
-          
             mkdir -p ~/apps
             cd ~/apps
           
@@ -43,15 +41,18 @@ jobs:
               git clone git@github.com:eugene-ruby/site-snoop-bot.git
               cd site-snoop-bot
             fi
-          
+            echo "${{ env.HARBOR_PASSWORD }}" | docker login harbor.in.vocabapp.ru -u ${{ env.HARBOR_USERNAME }} --password-stdin
+            
+            echo "⬇️  Pulling Base Docker image"
+            docker pull harbor.in.vocabapp.ru/projects/ruby-ruby3.4-node-chrome:latest
+            echo "⬇️  Build App Docker image"
+            docker build -t harbor.in.vocabapp.ru/projects/site-snoop-app:latest .
+
             echo "💾 Writing .env"
             echo "TELEGRAM_API_TOKEN=${{ env.TELEGRAM_API_TOKEN }}" > .env
             echo "REDIS_URL=${{ env.REDIS_URL }}" >> .env
             echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> .env
-          
-            echo "⬇️  Pulling Docker image"
-            docker pull harbor.in.vocabapp.ru/projects/site-snoop-app:latest
-          
+
             echo "🔄 Restarting with docker-compose"
             docker-compose down
             docker-compose pull

@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   bot:
-    build: .
+    image: harbor.in.vocabapp.ru/projects/site-snoop-app:latest
     command: bundle exec rake bot:listen
     env_file: .env
     depends_on:
@@ -13,7 +13,7 @@ services:
       - backend
 
   sidekiq:
-    build: .
+    image: harbor.in.vocabapp.ru/projects/site-snoop-app:latest
     command: bundle exec sidekiq -r ./config/boot.rb
     env_file: .env
     depends_on:
@@ -31,7 +31,7 @@ services:
     networks:
       - backend
 
-  db:
+  postgres:
     image: postgres:15-alpine
     restart: always
     volumes:

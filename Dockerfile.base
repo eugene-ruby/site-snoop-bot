@@ -1,0 +1,14 @@
+# Dockerfile.base
+FROM ruby:3.4
+
+# Установка системных зависимостей, Node.js и Chrome Driver
+RUN apt-get update -qq && apt-get install -y \
+  build-essential \
+  nodejs \
+  npm \
+  chromium-driver \
+  cron \
+  git
+
+# Создание рабочей директории
+WORKDIR /app

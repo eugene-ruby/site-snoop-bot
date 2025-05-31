@@ -1,14 +1,9 @@
-FROM ruby:3.4
+FROM harbor.infra.vocabapp.ru/projects/ruby-ruby3.4-node-chrome:latest
 
-# Установка Node.js и Chrome
-RUN apt-get update -qq && apt-get install -y nodejs npm chromium-driver
-
-# Установка зависимостей
 WORKDIR /app
 COPY . /app
-RUN bundle install
 
-# Установка cron
-RUN apt-get update -qq && apt-get install -y cron
+# Установка зависимостей проекта
+RUN bundle install
 
 # CMD не прописываем, запуск через docker-compose

@@ -34,6 +34,11 @@ services:
     restart: always
     networks:
       - snoopnet
+    sysctls:
+      vm.overcommit_memory: '1'
+      command: [ "redis-server", "--appendonly", "yes" ]  # Включает AOF для надежности
+      volumes:
+        - redis-data:/data
 
   postgres:
     image: postgres:15
@@ -49,6 +54,7 @@ services:
 
 volumes:
   pgdata:
+  redis-data:
 
 networks:
   snoopnet:
