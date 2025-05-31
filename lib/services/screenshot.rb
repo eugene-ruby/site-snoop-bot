@@ -14,6 +14,8 @@ module Screenshot
       browser = Snoop::Browser.new
       browser.with_driver do |driver|
         driver.get(@url)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+        sleep 1
         full_page_screenshot(driver, file_path)
       end
 
