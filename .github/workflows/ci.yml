@@ -29,16 +29,32 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             set -e
+          
             echo "${{ env.HARBOR_PASSWORD }}" | docker login ${{ env.HARBOR_REGISTRY }} -u ${{ env.HARBOR_USERNAME }} --password-stdin
-            docker pull ${{ env.HARBOR_REGISTRY }}/projects/site-snoop-app:latest
-
-            mkdir -p ~/apps/site-snoop-bot
-            cd ~/apps/site-snoop-bot
-
+          
+            mkdir -p ~/apps
+            cd ~/apps
+          
+            if [ -d "site-snoop-bot/.git" ]; then
+              echo "🌀 Pulling latest changes in site-snoop-bot"
+              cd site-snoop-bot
+              git pull
+            else
+              echo "📥 Cloning fresh copy of site-snoop-bot"
+              git clone git@github.com:<твой-логин>/site-snoop-bot.git
+              cd site-snoop-bot
+            fi
+          
+            echo "💾 Writing .env"
             echo "TELEGRAM_API_TOKEN=${{ env.TELEGRAM_API_TOKEN }}" > .env
             echo "REDIS_URL=${{ env.REDIS_URL }}" >> .env
             echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> .env
-
+          
+            echo "⬇️  Pulling Docker image"
+            docker pull ${{ env.HARBOR_REGISTRY }}/projects/site-snoop-app:latest
+          
+            echo "🔄 Restarting with docker-compose"
             docker-compose down
             docker-compose pull
             docker-compose up -d
+
