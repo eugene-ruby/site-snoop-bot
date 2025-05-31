@@ -24,6 +24,9 @@ RSpec.describe Bot::Commands::WatchCommand do
     end
 
     context 'when there is an error creating the watch task' do
+      before do
+        allow(WatchTaskCreator).to receive(:call).and_return(Dry::Monads::Failure(:error))
+      end
 
       it 'sends an error message' do
         expect(api).to receive(:send_message).with(chat_id: message.chat.id, text: "Не удалось установить наблюдение. Попробуйте позже.")
