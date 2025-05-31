@@ -26,7 +26,7 @@ services:
       - snoopnet
 
   redis:
-    image: redis:6
+    image: redis:7
     restart: always
     networks:
       - snoopnet
