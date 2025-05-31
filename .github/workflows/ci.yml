@@ -12,7 +12,7 @@ jobs:
     env:
       HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
       HARBOR_PASSWORD: ${{ secrets.HARBOR_PASSWORD }}
-      TELEGRAM_API_TOKEN: ${{ secrets.TELEGRAM_API_TOKEN }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       REDIS_URL: ${{ secrets.REDIS_URL }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
@@ -50,7 +50,7 @@ jobs:
             docker push harbor.in.vocabapp.ru/projects/site-snoop-app:latest
 
             echo "💾 Writing .env"
-            echo "TELEGRAM_API_TOKEN=${{ env.TELEGRAM_API_TOKEN }}" > .env
+            echo "TELEGRAM_BOT_TOKEN=${{ env.TELEGRAM_BOT_TOKEN }}" > .env
             echo "REDIS_URL=${{ env.REDIS_URL }}" >> .env
             echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> .env
 
