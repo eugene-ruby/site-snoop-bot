@@ -3,6 +3,7 @@ version: "3.9"
 services:
   site-snoop-bot:
     image: harbor.in.vocabapp.ru/projects/site-snoop-app:latest
+    command: bundle exec rake bot:listen
     env_file:
       - .env
     restart: always
