@@ -7,10 +7,10 @@ RSpec.describe Bot::Commands::ListCommand do
 
   describe '.call' do
     context 'when there are snapshots' do
-      let!(:snapshot) { create(:snapshot, chat_id: 1, url: 'http://example.com', attribute_query: 'data-qa=title') }
+      let!(:snapshot) { create(:snapshot, chat_id: 1, url: 'http://example.com', attribute_query: 'data-qa=title', last_checked_at: Time.now) }
 
-      it 'sends a list of snapshots' do
-        expect(api).to receive(:send_message).with(chat_id: 1, text: "ID: #{snapshot.id}, URL: http://example.com, Attribute Query: data-qa=title")
+      it 'sends a list of snapshots with Last Checked At' do
+        expect(api).to receive(:send_message).with(chat_id: 1, text: "ID: #{snapshot.id}, URL: http://example.com, Attribute Query: data-qa=title, Last Checked At: #{snapshot.last_checked_at.strftime('%Y-%m-%d %H:%M')}")
         described_class.call(bot: bot, message: message)
       end
     end
