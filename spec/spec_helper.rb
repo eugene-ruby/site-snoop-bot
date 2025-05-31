@@ -8,7 +8,6 @@ require 'factory_bot'
 
 require 'database_cleaner/active_record'
 
-
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
@@ -21,10 +20,11 @@ RSpec.configure do |config|
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
   config.include FactoryBot::Syntax::Methods
+
   config.before(:suite) do
     FactoryBot.find_definitions
-    DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.strategy = :transaction
   end
 
   config.around(:each) do |example|
