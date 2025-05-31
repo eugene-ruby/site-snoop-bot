@@ -1,5 +1,4 @@
 require 'sidekiq'
-require_relative '../snoop/browser'
 
 class CheckTaskWorker
   include Sidekiq::Worker
