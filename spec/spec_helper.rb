@@ -1,10 +1,11 @@
 require 'dotenv/load'
 require_relative '../db/setup'
+require_relative '../config/boot'
 require 'zeitwerk'
 
-require_relative '../config/boot'
 require 'rspec'
 require 'factory_bot'
+
 require 'database_cleaner/active_record'
 
 
@@ -19,20 +20,6 @@ RSpec.configure do |config|
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
-  config.include FactoryBot::Syntax::Methods
-  config.before(:suite) do
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with(:truncation)
-  end
-
-  config.around(:each) do |example|
-    DatabaseCleaner.cleaning do
-      example.run
-    end
-  end
-require 'factory_bot'
-
-RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.before(:suite) do
     FactoryBot.find_definitions
