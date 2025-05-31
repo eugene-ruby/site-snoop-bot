@@ -1,5 +1,7 @@
 module Snoop
   class Browser
+    class Error < StandardError; end
+
     def initialize(timeout: 10)
       options = Selenium::WebDriver::Options.chrome(
         args: [
