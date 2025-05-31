@@ -1,4 +1,5 @@
 require 'mini_magick'
+require_relative '../../config/constants'
 
 module Screenshots
   class GridOverlay
@@ -16,8 +17,8 @@ module Screenshots
 
       image.combine_options do |c|
         c.fill 'none'
-        c.stroke 'red'
-        c.strokewidth 5
+        c.stroke GRID_LINE_COLOR
+        c.strokewidth GRID_LINE_WIDTH
 
         # Draw vertical lines
         (1..2).each do |i|

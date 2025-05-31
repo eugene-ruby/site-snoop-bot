@@ -1,2 +1,2 @@
-# Максимальное количество наблюдаемых записей на одного пользователя (chat_id)
-MAX_SNAPSHOTS_PER_CHAT = 10
+GRID_LINE_COLOR = 'red'
+GRID_LINE_WIDTH = 5
