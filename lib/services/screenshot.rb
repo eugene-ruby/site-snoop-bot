@@ -1,6 +1,5 @@
 require 'fileutils'
 require 'securerandom'
-require_relative '../snoop/browser'
 
 module Screenshot
   class Screenshot
