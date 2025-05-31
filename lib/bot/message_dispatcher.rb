@@ -10,6 +10,8 @@ module Bot
         Commands::ListCommand.call(bot: bot, message: message)
       when /^\/del\s+(\d+)$/
         Commands::DeleteCommand.call(bot: bot, message: message)
+      when '/screen'
+        Commands::ScreenCommand.call(bot: bot, message: message)
       else
         Commands::UnknownCommand.call(bot: bot, message: message)
       end
