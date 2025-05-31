@@ -1,3 +1,4 @@
+require_relative 'constants'
 require 'dotenv/load'
 require_relative '../db/setup'
 require 'zeitwerk'
