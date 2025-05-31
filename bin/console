@@ -3,7 +3,10 @@ require_relative '../config/boot'
 require 'irb'
 
 def reload!
-  Dir["#{__dir__}/../lib/**/*.rb"].each { |file| load file }
+  $VERBOSE = nil
+  puts "Перезагрузка файлов проекта..."
+  reloaded_files = Dir["#{__dir__}/../lib/**/*.rb"].each { |file| load file }
+  puts "Перезагрузка завершена. Количество перезагруженных файлов: #{reloaded_files.size}"
 end
 
 IRB.start
