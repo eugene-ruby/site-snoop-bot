@@ -33,6 +33,7 @@ module Screenshots
       
       image = MiniMagick::Image.open(file_path)
       image.colorspace "sRGB"
+      image.write(file_path)
     end
   end
 end
