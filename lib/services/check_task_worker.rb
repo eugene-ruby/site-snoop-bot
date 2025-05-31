@@ -1,4 +1,5 @@
 require 'sidekiq'
+require_relative '../snoop/browser'
 
 class CheckTaskWorker
   include Sidekiq::Worker
@@ -8,7 +9,8 @@ class CheckTaskWorker
     return unless snapshot
 
     begin
-      content = with_driver do |driver|
+      browser = Snoop::Browser.new
+      content = browser.with_driver do |driver|
         url = snapshot.url
         attribute_query = snapshot.attribute_query
         driver.get(url)
@@ -20,29 +22,6 @@ class CheckTaskWorker
       Bot::Logger.logger.warn("Элемент не найден по запросу: '#{attribute_query}' на странице #{url} (snapshot_id: #{snapshot.id})")
       snapshot.update(last_checked_at: Time.now)
       handle_error(e)
-    end
-  end
-
-  def with_driver
-    Dir.mktmpdir do |user_data_dir|
-      options = Selenium::WebDriver::Options.chrome(
-        args: [
-          'headless',
-          '--no-sandbox',
-          '--disable-dev-shm-usage',
-          "--user-data-dir=#{user_data_dir}"
-        ]
-      )
-
-      driver = Selenium::WebDriver.for :chrome, options: options
-      driver.manage.timeouts.page_load = 10
-      driver.manage.timeouts.implicit_wait = 10
-      yield(driver)
-    rescue Selenium::WebDriver::Error::TimeoutError,
-      Selenium::WebDriver::Error::NoSuchElementError => e
-      handle_error(e)
-    ensure
-      driver.quit if driver
     end
   end
 
