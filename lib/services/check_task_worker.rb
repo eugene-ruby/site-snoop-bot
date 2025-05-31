@@ -1,6 +1,7 @@
 require 'sidekiq'
 require 'selenium-webdriver'
 require 'digest'
+require 'tmpdir'
 
 class CheckTaskWorker
   include Sidekiq::Worker
@@ -16,14 +17,26 @@ class CheckTaskWorker
   private
 
   def with_driver
-    driver = Selenium::WebDriver.for :chrome, options: Selenium::WebDriver::Options.chrome(args: ['headless'])
-    driver.manage.timeouts.page_load = 10
-    driver.manage.timeouts.implicit_wait = 10
-    yield(driver)
-  rescue Selenium::WebDriver::Error::TimeoutError, Selenium::WebDriver::Error::NoSuchElementError => e
-    handle_error(e)
-  ensure
-    driver.quit if driver
+    Dir.mktmpdir do |user_data_dir|
+      options = Selenium::WebDriver::Options.chrome(
+        args: [
+          'headless',
+          '--no-sandbox',
+          '--disable-dev-shm-usage',
+          "--user-data-dir=#{user_data_dir}"
+        ]
+      )
+
+      driver = Selenium::WebDriver.for :chrome, options: options
+      driver.manage.timeouts.page_load = 10
+      driver.manage.timeouts.implicit_wait = 10
+      yield(driver)
+    rescue Selenium::WebDriver::Error::TimeoutError,
+      Selenium::WebDriver::Error::NoSuchElementError => e
+      handle_error(e)
+    ensure
+      driver.quit if driver
+    end
   end
 
   def extract_content(driver, url, attribute_query)

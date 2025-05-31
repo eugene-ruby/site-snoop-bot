@@ -134,6 +134,7 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode (0.4.4.5)
     uri (1.0.3)
+    webrick (1.9.1)
     websocket (1.2.11)
     whenever (1.0.0)
       chronic (>= 0.6.3)
@@ -157,6 +158,7 @@ DEPENDENCIES
   sidekiq
   sidekiq-cron
   telegram-bot-ruby
+  webrick
   whenever
   zeitwerk
 

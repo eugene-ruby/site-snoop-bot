@@ -15,6 +15,7 @@ gem 'redis'
 gem 'sidekiq'
 gem 'sidekiq-cron'
 
-group :development do
+group :development, :test do
+  gem 'webrick'
   gem 'whenever', require: false
 end
