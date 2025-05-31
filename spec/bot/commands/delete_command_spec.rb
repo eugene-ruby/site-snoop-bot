@@ -25,5 +25,14 @@ RSpec.describe Bot::Commands::DeleteCommand do
         described_class.call(bot: bot, message: message)
       end
     end
+
+    context 'when snapshot id does not match chat_id' do
+      let(:message) { double('message', text: "/del #{snapshot.id}", chat: double('chat', id: 456)) }
+
+      it 'sends a message that snapshot is not found' do
+        expect(bot.api).to receive(:send_message).with(chat_id: 123, text: "Снимок с ID #{snapshot.id} не найден.")
+        described_class.call(bot: bot, message: message)
+      end
+    end
   end
 end
