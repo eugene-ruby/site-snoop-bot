@@ -1,3 +1,7 @@
+require 'fileutils'
+require 'securerandom'
+require 'mini_magick'
+
 module Screenshots
   class GridZoom
     def initialize(screenshot_path, columns:, rows:, target:)
@@ -22,18 +26,26 @@ module Screenshots
       y = row * cell_height
 
       cropped_image_path = "tmp/screenshots/cropped_#{SecureRandom.hex(5)}_#{Time.now.to_i}.png"
-      image.crop("#{cell_width}x#{cell_height}+#{x}+#{y}")
-      
+
+      # Вырезаем и сохраняем
+      # Принудительно устанавливаем цветовое пространство в sRGB,
+      # чтобы избежать ошибок при сохранении PNG с белым (grayscale) содержимым:
+      # ImageMagick может сохранить такую картинку в grayscale с RGB-профилем,
+      # что вызывает конфликт: "RGB color space not permitted on grayscale PNG"
+
       MiniMagick::Tool::Convert.new do |convert|
-        convert << cropped_image_path
+        convert << @screenshot_path
+        convert.crop "#{cell_width}x#{cell_height}+#{x}+#{y}"
+        convert.repage.+
         convert.colorspace "sRGB"
         convert << cropped_image_path
       end
 
       overlay = Screenshots::GridOverlay.new(cropped_image_path, columns: 3, rows: 3)
-      overlay.apply_grid_overlay
+      output_path = overlay.apply_grid_overlay
+      FileUtils.rm_f(cropped_image_path)
 
-      cropped_image_path
+      output_path
     end
   end
 end

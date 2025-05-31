@@ -68,6 +68,9 @@ GEM
     ice_nine (0.11.2)
     json (2.12.2)
     logger (1.7.0)
+    mini_magick (5.2.0)
+      benchmark
+      logger
     minitest (5.25.5)
     multipart-post (2.4.1)
     net-http (0.6.0)
@@ -132,6 +135,7 @@ DEPENDENCIES
   dotenv
   dry-monads
   factory_bot
+  mini_magick
   pg
   rake
   redis

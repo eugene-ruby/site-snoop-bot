@@ -6,6 +6,8 @@ module Screenshots
     end
 
     def call
+      FileUtils.mkdir_p("tmp/screenshots")
+
       screenshot = Screenshots::Screenshot.new(@url)
       screenshot_path = screenshot.capture
 
@@ -16,15 +18,13 @@ module Screenshots
           rows: @zoom[:rows],
           target: @zoom[:target]
         )
-        return zoomed.zoom
+        zoomed.zoom
       else
         auto_grid_overlay = Screenshots::AutoGridOverlay.new(screenshot_path)
         columns, rows = auto_grid_overlay.calculate_grid_dimensions
 
         overlay = Screenshots::GridOverlay.new(screenshot_path, columns: columns, rows: rows)
         overlay.apply_grid_overlay
-
-        return screenshot_path
       end
     end
   end
